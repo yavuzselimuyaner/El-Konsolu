@@ -1,0 +1,233 @@
+<meta charset="utf-8">
+<title>Konsol Kutusu</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<style>
+/* Layout: one workbench sheet. The 3D model leads, printing and assembly follow in order. */
+:root {
+  --bg: #e9eef0; --sheet: #f7f9fa; --fg: #17242b; --muted: #55666f; --line: #c6d1d6; --accent: #0a6b5e;
+  --warn: #a4400f; --warn-bg: #fbeadf; --stage: #dfe6e9;
+  --display: "Barlow Condensed", "Arial Narrow", sans-serif;
+  --body: "IBM Plex Sans", "Segoe UI", sans-serif;
+  --mono: "IBM Plex Mono", Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #11181b; --sheet: #182226; --fg: #e4ecee; --muted: #9db0b7; --line: #31424a; --accent: #4fd0ba;
+    --warn: #f5a877; --warn-bg: #3a2418; --stage: #1d282d; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #11181b; --sheet: #182226; --fg: #e4ecee; --muted: #9db0b7; --line: #31424a; --accent: #4fd0ba;
+  --warn: #f5a877; --warn-bg: #3a2418; --stage: #1d282d; color-scheme: dark;
+}
+body { background: var(--bg); color: var(--fg); font: 400 16px/1.55 var(--body); }
+.page {
+  max-width: 980px; margin: 0 auto; padding-block: 32px 64px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  display: grid; gap: 40px;
+}
+h1, h2 { font-family: var(--display); font-weight: 700; line-height: 1.08; text-wrap: balance; margin: 0; }
+h1 { font-size: clamp(2.5rem, 7vw, 4rem); }
+h2 { font-size: 1.9rem; }
+p { margin: 0; max-width: 68ch; }
+.intro, section { display: grid; gap: 12px; min-width: 0; }
+.lede { font-size: 1.12rem; color: var(--muted); }
+.stage { position: relative; height: min(68vh, 560px); min-height: 360px; background: var(--stage); border: 1px solid var(--line); border-radius: 4px; overflow: hidden; touch-action: none; }
+.stage canvas { display: block; width: 100%; height: 100%; }
+#nogl[hidden] { display: none; }
+#nogl { position: absolute; inset: 0; display: grid; place-items: center; padding: 16px; text-align: center; color: var(--muted); }
+.controls { display: flex; flex-wrap: wrap; gap: 10px 22px; align-items: center; }
+.controls label { display: flex; gap: 8px; align-items: center; font-weight: 500; }
+.controls input[type=range] { width: min(240px, 60vw); accent-color: var(--accent); }
+.controls button { font: 500 .95rem var(--body); color: var(--accent); background: none; border: 1px solid var(--accent); border-radius: 4px; padding: 5px 12px; cursor: pointer; }
+.controls button[aria-pressed="true"] { background: var(--accent); color: var(--sheet); }
+.stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 2px 28px; margin: 0; padding: 0; list-style: none; }
+.stats li { display: flex; justify-content: space-between; gap: 12px; border-bottom: 1px solid var(--line); padding: 7px 0; }
+.stats b { font-family: var(--mono); font-weight: 600; }
+.warn { background: var(--warn-bg); color: var(--warn); padding: 12px 14px; border-radius: 4px; font-weight: 500; max-width: 74ch; }
+.tablewrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 4px; background: var(--sheet); }
+table { border-collapse: collapse; width: 100%; }
+th { font-family: var(--display); font-size: 1rem; letter-spacing: .03em; text-align: left; color: var(--muted); font-weight: 600; }
+th, td { padding: 8px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+tr:last-child td { border-bottom: 0; }
+.mono { font-family: var(--mono); font-weight: 600; font-size: .92rem; }
+.nw { white-space: nowrap; }
+ol { margin: 0; padding-left: 1.4em; display: grid; gap: 8px; max-width: 72ch; }
+button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+</style>
+
+<div class="page">
+  <header class="intro">
+    <h1>Konsol kutusu</h1>
+    <p class="lede">Game Boy düzeninde iki parçalı kutu. D-pad ve tuşlar da yazıcıdan çıkıyor, altlarında elindeki 6×6 tuşlar çalışıyor. 12×12 tuş almana gerek yok.</p>
+  </header>
+
+  <section>
+    <div class="stage" id="stage"><div id="nogl">3B görünüm yükleniyor.</div></div>
+    <div class="controls">
+      <label for="explode">Parçaları ayır <input id="explode" type="range" min="0" max="1" step="0.01" value="0.55"></label>
+      <button id="shells" type="button" aria-pressed="true">Kutuyu göster</button>
+      <button id="rear" type="button">Arkadan bak</button>
+    </div>
+    <p style="color:var(--muted);font-size:.93rem">Sürükleyerek döndür, kaydırarak yaklaş. Elektronik parçalar temsilidir.</p>
+    <ul class="stats">
+      <li>Genişlik <b>75 mm</b></li>
+      <li>Boy <b>95 mm</b></li>
+      <li>Kalınlık <b>28 mm</b></li>
+      <li>Çakışma testi <b>temiz</b></li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Önce ölç</h2>
+    <p class="warn">Bu ölçüler kartın fotoğrafından ve yaygın parça boyutlarından çıkarıldı, gerçek parçalarda doğrulanmadı. Tüm kutuyu basmadan önce aşağıdaki değerleri kumpasla ölç ve bana yaz. Modeli birkaç saniyede güncellerim.</p>
+    <div class="tablewrap"><table>
+      <thead><tr><th>Ölçü</th><th class="nw">Modeldeki değer</th></tr></thead>
+      <tbody>
+        <tr><td>6×6 tuşun, gövde altından buton ucuna yüksekliği</td><td class="mono nw">5,0 mm</td></tr>
+        <tr><td>Dişi soket yüksekliği</td><td class="mono nw">8,5 mm</td></tr>
+        <tr><td>Pertinaks ölçüsü ve köşe deliğinin kenara uzaklığı</td><td class="mono nw">70×90, 2,5 mm</td></tr>
+        <tr><td>Kartın üst ucundan görünen ekranın ortasına uzaklık</td><td class="mono nw">27,7 mm</td></tr>
+        <tr><td>USB ucundan BOOT ve IO14 tuş ortasına uzaklık</td><td class="mono nw">3,5 mm</td></tr>
+        <tr><td>Kartın orta çizgisinden BOOT ve IO14 tuşuna uzaklık</td><td class="mono nw">8,3 mm</td></tr>
+        <tr><td>Pil boyutu</td><td class="mono nw">50×34×6 mm</td></tr>
+      </tbody>
+    </table></div>
+    <p>Sonra <span class="mono">deneme_plakasi.stl</span> dosyasını bas. Yalnızca üst yüzeydir, kısa sürer. Kartın üstüne koyup ekran ve BOOT, IO14 deliklerinin oturduğunu gör.</p>
+  </section>
+
+  <section>
+    <h2>Basılacak parçalar</h2>
+    <div class="tablewrap"><table>
+      <thead><tr><th>Dosya</th><th>Adet</th><th>Ne</th></tr></thead>
+      <tbody>
+        <tr><td class="mono">on_kapak.stl</td><td class="mono">1</td><td>Ekran ve tuş delikli ön yüz</td></tr>
+        <tr><td class="mono">arka_kapak.stl</td><td class="mono">1</td><td>Pil, SD ve ses modülü bölümü</td></tr>
+        <tr><td class="mono">dpad.stl</td><td class="mono">1</td><td>Artı şeklinde yön tuşu</td></tr>
+        <tr><td class="mono">tus_a_b.stl</td><td class="mono">2</td><td>A ve B</td></tr>
+        <tr><td class="mono">tus_start_select.stl</td><td class="mono">2</td><td>Start ve Select</td></tr>
+        <tr><td class="mono">tus_boot_io14.stl</td><td class="mono">2</td><td>Karttaki iki tuşa basan küçük pimler</td></tr>
+      </tbody>
+    </table></div>
+    <p>Dosyalar <span class="mono">el-konsolu-calismasi\kutu\stl</span> klasöründe. Hepsi yazıcıya doğru yönde kaydedildi, çevirme.</p>
+    <ul class="stats">
+      <li>Malzeme <b>PLA</b></li>
+      <li>Katman <b>0,2 mm</b></li>
+      <li>Duvar <b>3</b></li>
+      <li>Doluluk <b>%20</b></li>
+      <li>Destek <b>yok</b></li>
+    </ul>
+    <p>Parçalarda köprü ve 45 derecelik eğimler var, destek gerekmemeli. Yazıcında köprüler sarkarsa dilimleyicide yalnızca USB yuvası için destek aç.</p>
+  </section>
+
+  <section>
+    <h2>Toplama</h2>
+    <ol>
+      <li>Ön kapağı yüzü aşağı bakacak şekilde masaya koy.</li>
+      <li>D-pad'i, A ve B'yi, Start ve Select'i, BOOT ve IO14 pimlerini içten deliklerine yerleştir.</li>
+      <li>Kartı soketlere takılı pertinaksı üstüne oturt. USB, kutunun sağ duvarındaki yuvaya gelir.</li>
+      <li>Pil, ses modülü ve SD adaptörünü arka kapağa çift taraflı bantla sabitle. Jak ve SD alt duvardaki deliklere, anahtar sol duvardaki yuvaya gelsin.</li>
+      <li>Arka kapağı kapat, dört M2×20 vidayla arkadan sık. Vidalar pertinaks köşelerinden geçip ön kapağa tutunur, fazla sıkma.</li>
+    </ol>
+  </section>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+<script>
+const MODEL = /*DATA*/null;
+const PARTS = {
+  on_kapak:   { color: 0x2f6f8f, lift: 62, shell: true },
+  arka_kapak: { color: 0x2f6f8f, lift: -46, shell: true },
+  dpad:       { color: 0x1d2730, lift: 36 },
+  tus_a:      { color: 0xc44a2d, lift: 36 },
+  tus_b:      { color: 0xc44a2d, lift: 36 },
+  tus_select: { color: 0x59666e, lift: 36 },
+  tus_start:  { color: 0x59666e, lift: 36 },
+  tus_io14:   { color: 0xc8a13c, lift: 36 },
+  tus_boot:   { color: 0xc8a13c, lift: 36 },
+  pertinaks:  { color: 0x2f7d4f, lift: 0 },
+  soketler:   { color: 0x22282c, lift: 0 },
+  t_display:  { color: 0x111518, lift: 12 },
+  tuslar:     { color: 0x8d979c, lift: 0 },
+  pil:        { color: 0xb9c0c4, lift: -24 },
+  sd_adaptor: { color: 0x3a5ec0, lift: -24 },
+  dac:        { color: 0x6e3fa6, lift: -24 },
+};
+
+function start() {
+  const stage = document.getElementById("stage");
+  const note = document.getElementById("nogl");
+  if (!window.THREE) { note.textContent = "3B kütüphanesi yüklenemedi. Sayfayı yenile."; return; }
+
+  let renderer;
+  try { renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true }); }
+  catch (e) { note.textContent = "Bu tarayıcı 3B görünümü açamadı."; return; }
+  note.hidden = true;
+  renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+  stage.appendChild(renderer.domElement);
+
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(32, 1, 1, 2000);
+  camera.up.set(0, 0, 1);
+  const home = () => camera.position.set(170, -290, 190);
+  home();
+  scene.add(new THREE.HemisphereLight(0xffffff, 0x8899a0, 0.85));
+  const sun = new THREE.DirectionalLight(0xffffff, 0.75);
+  sun.position.set(120, -160, 240);
+  scene.add(sun);
+
+  const centre = new THREE.Group();
+  centre.position.set(-35, 45, -2);      // Perfboard middle at the origin
+  scene.add(centre);
+
+  const meshes = {};
+  for (const name in PARTS) {
+    const bytes = Uint8Array.from(atob(MODEL[name]), c => c.charCodeAt(0));
+    const geometry = new THREE.BufferGeometry();
+    geometry.setAttribute("position", new THREE.BufferAttribute(new Float32Array(bytes.buffer), 3));
+    geometry.computeVertexNormals();
+    const material = new THREE.MeshStandardMaterial({ color: PARTS[name].color, roughness: 0.62, metalness: 0.05, flatShading: true, side: THREE.DoubleSide });
+    meshes[name] = new THREE.Mesh(geometry, material);
+    centre.add(meshes[name]);
+  }
+
+  const controls = new THREE.OrbitControls(camera, renderer.domElement);
+  controls.enableDamping = true;
+  controls.minDistance = 90;
+  controls.maxDistance = 900;
+
+  const explode = document.getElementById("explode");
+  const shells = document.getElementById("shells");
+  const rear = document.getElementById("rear");
+  const place = () => {
+    for (const name in PARTS) meshes[name].position.z = PARTS[name].lift * Number(explode.value);
+  };
+  explode.addEventListener("input", place);
+  shells.addEventListener("click", () => {
+    const show = shells.getAttribute("aria-pressed") !== "true";
+    shells.setAttribute("aria-pressed", show);
+    for (const name in PARTS) if (PARTS[name].shell) meshes[name].visible = show;
+  });
+  rear.addEventListener("click", () => {
+    const back = rear.getAttribute("aria-pressed") !== "true";
+    rear.setAttribute("aria-pressed", back);
+    if (back) camera.position.set(170, -290, -190); else home();
+  });
+  place();
+
+  const resize = () => {
+    const w = stage.clientWidth, h = stage.clientHeight;
+    renderer.setSize(w, h, false);
+    camera.aspect = w / h;
+    camera.updateProjectionMatrix();
+  };
+  new ResizeObserver(resize).observe(stage);
+  resize();
+  renderer.setAnimationLoop(() => { controls.update(); renderer.render(scene, camera); });
+}
+start();
+</script>

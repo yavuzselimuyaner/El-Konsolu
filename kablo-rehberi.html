@@ -1,0 +1,483 @@
+<title>T-Display Konsol Kablo Rehberi</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<style>
+/* Layout: a workbench sheet. One column of steps, with the two wiring drawings as the page's main objects. */
+:root {
+  --bg: #e9eef0;
+  --sheet: #f7f9fa;
+  --fg: #17242b;
+  --muted: #55666f;
+  --line: #c6d1d6;
+  --accent: #0a6b5e;
+  --warn: #a4400f;
+  --warn-bg: #fbeadf;
+  --pcb: #1a2529;
+  --silk: #eef3f4;
+  --pad: #b9c2c6;
+  --bb: #e3e5df;
+  --bb-edge: #bfc4ba;
+  --hole: #6f7a78;
+  --rail-neg: #2563b8;
+  --rail-pos: #c7372f;
+  --gnd: #27343a;
+  --w1: #d13f8a; --w2: #e07a12; --w3: #7a4fd0; --w4: #0f8fb3;
+  --w5: #6d8a12; --w6: #b0442f; --w7: #0d9970; --w8: #3a62d8;
+  --display: "Barlow Condensed", "Arial Narrow", sans-serif;
+  --body: "IBM Plex Sans", "Segoe UI", sans-serif;
+  --mono: "IBM Plex Mono", Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #11181b; --sheet: #182226; --fg: #e4ecee; --muted: #9db0b7; --line: #31424a;
+    --accent: #4fd0ba; --warn: #f5a877; --warn-bg: #3a2418; --pcb: #0b1113; --silk: #e4ecee; --pad: #8d999e;
+    --bb: #2b3438; --bb-edge: #40505a; --hole: #0e1416; --rail-neg: #6ea5f0; --rail-pos: #ef7a72; --gnd: #c8d4d8;
+    --w1: #f06fb0; --w2: #f4a23e; --w3: #a98bf0; --w4: #45c2e3; --w5: #acd03c; --w6: #ed8267; --w7: #3fd3a6; --w8: #7f9ff5;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #11181b; --sheet: #182226; --fg: #e4ecee; --muted: #9db0b7; --line: #31424a;
+  --accent: #4fd0ba; --warn: #f5a877; --warn-bg: #3a2418; --pcb: #0b1113; --silk: #e4ecee; --pad: #8d999e;
+  --bb: #2b3438; --bb-edge: #40505a; --hole: #0e1416; --rail-neg: #6ea5f0; --rail-pos: #ef7a72; --gnd: #c8d4d8;
+  --w1: #f06fb0; --w2: #f4a23e; --w3: #a98bf0; --w4: #45c2e3; --w5: #acd03c; --w6: #ed8267; --w7: #3fd3a6; --w8: #7f9ff5;
+  color-scheme: dark;
+}
+body { background: var(--bg); color: var(--fg); font: 400 16px/1.55 var(--body); }
+.page {
+  max-width: 980px; margin: 0 auto;
+  padding-block: 32px 64px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  display: grid; gap: 44px;
+}
+h1, h2 { font-family: var(--display); font-weight: 700; line-height: 1.08; text-wrap: balance; margin: 0; }
+h1 { font-size: clamp(2.5rem, 7vw, 4rem); }
+h2 { font-size: 1.9rem; }
+p { margin: 0; max-width: 68ch; }
+.intro { display: grid; gap: 12px; }
+.lede { font-size: 1.12rem; color: var(--muted); }
+section { display: grid; gap: 14px; min-width: 0; }
+.warn { background: var(--warn-bg); color: var(--warn); padding: 12px 14px; border-radius: 4px; font-weight: 500; max-width: 74ch; }
+.parts { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 2px 28px; margin: 0; padding: 0; list-style: none; }
+.parts li { display: flex; justify-content: space-between; gap: 12px; border-bottom: 1px solid var(--line); padding: 7px 0; }
+.parts b { font-family: var(--mono); font-weight: 600; }
+.draw { background: var(--sheet); border: 1px solid var(--line); border-radius: 4px; overflow-x: auto; padding: 10px; }
+.draw svg { display: block; width: 100%; height: auto; }
+.draw.wide svg { min-width: 760px; }
+.draw.tall { max-width: 640px; }
+.draw.tall svg { min-width: 460px; }
+.cap { color: var(--muted); font-size: .93rem; }
+ol.steps { margin: 0; padding-left: 1.4em; display: grid; gap: 8px; max-width: 72ch; }
+.tablewrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 4px; background: var(--sheet); }
+table { border-collapse: collapse; width: 100%; font-variant-numeric: tabular-nums; }
+th { font-family: var(--display); font-size: 1rem; letter-spacing: .03em; text-align: left; color: var(--muted); font-weight: 600; }
+th, td { padding: 8px 12px; border-bottom: 1px solid var(--line); white-space: nowrap; }
+td.wrap, th.wrap { white-space: normal; min-width: 200px; }
+tr:last-child td { border-bottom: 0; }
+#wires tr { cursor: pointer; }
+#wires tr.on td { background: color-mix(in srgb, var(--accent) 14%, transparent); }
+#wires tr.done td:not(:last-child) { color: var(--muted); text-decoration: line-through; }
+.dot { display: inline-block; width: 12px; height: 12px; border-radius: 50%; margin-right: 8px; vertical-align: -1px; }
+.mono { font-family: var(--mono); font-weight: 600; }
+.chk { font: 500 .85rem var(--body); color: var(--accent); background: none; border: 1px solid var(--accent); border-radius: 4px; padding: 3px 9px; cursor: pointer; }
+.chk[aria-pressed="true"] { background: var(--accent); color: var(--sheet); }
+.chk:focus-visible, #wires tr:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.count { font-family: var(--mono); color: var(--accent); }
+svg text { font-family: var(--mono); fill: var(--fg); }
+svg .sm { font-size: 11px; }
+svg .md { font-size: 13px; font-weight: 600; }
+svg .lg { font-family: var(--display); font-size: 19px; font-weight: 700; }
+svg .silk { fill: var(--silk); }
+svg .mut { fill: var(--muted); }
+svg .w { transition: opacity .15s; }
+svg.focus .w:not(.on) { opacity: .16; }
+@media (prefers-reduced-motion: reduce) { svg .w { transition: none; } }
+</style>
+
+<div class="page">
+  <header class="intro">
+    <h1>Tuşları ve kabloları tak</h1>
+    <p class="lede">Lehim yok. Sekiz tuş ve dört direnç breadboard'a, sekiz kablo da karta gidiyor. Müzik için SD kart ve ses modülü bu düzene sonradan eklenir.</p>
+  </header>
+
+  <p class="warn">Kablo takarken USB'yi çıkar. Hiçbir tuşu 3V veya 5V pinine bağlama: tuşlar yalnızca GPIO ile GND arasına girer.</p>
+
+  <section>
+    <h2>Gerekenler</h2>
+    <ul class="parts">
+      <li>6x6 tuş <b>8</b></li>
+      <li>Dişi-erkek kablo <b>8</b></li>
+      <li>Erkek-erkek kablo <b>10</b></li>
+      <li>10K direnç <b>4</b></li>
+      <li>Breadboard <b>1</b></li>
+    </ul>
+    <p class="cap">Hepsi sende var. Kablo renkleri önemli değil, çizimdeki renkler yalnızca takibi kolaylaştırıyor. Kartın pinleri lehimli değilse bu rehber çalışmaz, önce okulda pinleri lehimlemek gerekir.</p>
+  </section>
+
+  <section>
+    <h2>1. Tuşları breadboard'a diz</h2>
+    <p>Her tuş ortadaki boşluğun üstüne oturur: iki bacağı e sırasında, iki bacağı f sırasında. Sütun numaraları çizimdeki gibi olsun. 4. ve 11. sütunun üst yarısı boş kalır, D-pad hatları orada birleşir.</p>
+    <div class="draw wide"><svg id="bb" viewBox="0 0 860 410" role="img" aria-label="Breadboard üzerinde sekiz tuş, dirençler ve kablolar"></svg></div>
+    <p class="cap">Her tuşun sinyali ve GND'si çapraz köşelerine gider. Çapraz bağlantı, tuşu hangi yönde taktığından bağımsız olarak çalışır.</p>
+  </section>
+
+  <section>
+    <h2>2. Bağlantıları tek tek yap</h2>
+    <p>D-pad'in dört tuşu iki pini paylaşır. Böylece SD kart ve ses modülüne pin kalır. Bu yüzden 10K dirençler gerekiyor. 10K direncin renkleri kahverengi, siyah, turuncudur. Yönü önemli değil.</p>
+    <p>Kartı arka yüzü sana bakacak, USB aşağıda duracak şekilde tut. Pin yazıları bu yüzde. Bir satıra dokununca o bağlantı çizimlerde öne çıkar.</p>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th class="wrap">Bağlantı</th><th>Parça</th><th class="wrap">Nereden nereye</th><th>Durum</th></tr></thead>
+        <tbody id="wires"></tbody>
+      </table>
+    </div>
+    <p class="cap"><span class="count" id="count">0 / 0</span> bağlantı tamam. Bu işaretler yalnızca bu tarayıcıda saklanır. Üst sıradaki güç hatları olmayan küçük breadboard'da pull-up dirençleri için 3V'u a–d sırasında boş bir sütuna al.</p>
+    <div class="draw tall"><svg id="board" viewBox="0 0 620 640" role="img" aria-label="T-Display S3 kartının arka yüzünde kullanılan pinler"></svg></div>
+    <p class="cap">LilyGO'nun V1.0 pin diyagramına göre çizildi. Ekran yüzünden bakınca sağ ve sol yer değiştirir.</p>
+  </section>
+
+  <section>
+    <h2>3. Çalıştır ve dene</h2>
+    <p>USB'yi tak. Karşına Retro-Go menüsü gelir. Sırayla bas:</p>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>Tuş</th><th class="wrap">Menüde</th><th class="wrap">Doom'da</th></tr></thead>
+        <tbody>
+          <tr><td class="mono">Sol / Sağ</td><td class="wrap">Sistem değiştirir</td><td class="wrap">Döner</td></tr>
+          <tr><td class="mono">Yukarı / Aşağı</td><td class="wrap">Listede gezer</td><td class="wrap">İleri, geri</td></tr>
+          <tr><td class="mono">A</td><td class="wrap">Açar</td><td class="wrap">Ateş, menüde onay</td></tr>
+          <tr><td class="mono">B</td><td class="wrap">Geri</td><td class="wrap">Basılıyken koşar ve yan adım atar</td></tr>
+          <tr><td class="mono">Start</td><td class="wrap">Sonraki sayfa</td><td class="wrap">Kapı açar, düğmeye basar</td></tr>
+          <tr><td class="mono">Select</td><td class="wrap">Önceki sayfa</td><td class="wrap">Silah değiştirir</td></tr>
+          <tr><td class="mono">BOOT (kartta)</td><td class="wrap">Menü</td><td class="wrap">Oyun menüsü</td></tr>
+          <tr><td class="mono">IO14 (kartta)</td><td class="wrap">Seçenekler</td><td class="wrap">Harita</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="cap">Oyunlarda ses, ses modülü bağlanınca gelir. Yazılımda buzzer desteği kaldırıldı.</p>
+  </section>
+
+  <section>
+    <h2>Müzik dinleme</h2>
+    <p>Ana menüde Müzik sekmesine geç ve bir şarkı seç. O klasördeki bütün şarkılar sırayla çalar.</p>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>Tuş</th><th class="wrap">Görev</th></tr></thead>
+        <tbody>
+          <tr><td class="mono">A</td><td class="wrap">Durdur, devam et</td></tr>
+          <tr><td class="mono">Sol / Sağ</td><td class="wrap">Önceki, sonraki şarkı</td></tr>
+          <tr><td class="mono">Yukarı / Aşağı</td><td class="wrap">Ses</td></tr>
+          <tr><td class="mono">B</td><td class="wrap">Şarkı listesi</td></tr>
+          <tr><td class="mono">Start</td><td class="wrap">Karışık çalma</td></tr>
+          <tr><td class="mono">Select</td><td class="wrap">Ekranı kapatır, müzik sürer. Herhangi bir tuş ekranı açar.</td></tr>
+          <tr><td class="mono">BOOT (kartta)</td><td class="wrap">Çıkış menüsü</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="cap">MP3 dosyalarını bilgisayarda SD kartın <span class="mono">roms/music</span> klasörüne kopyala. Karttaki oyunlar da aynı düzende <span class="mono">roms/gb</span>, <span class="mono">roms/nes</span>, <span class="mono">roms/doom</span> klasörlerine gider. SD takılıyken sistem iç hafızadaki oyunları göstermez, onları da karta kopyala. Kart FAT32 biçimli olmalı.</p>
+  </section>
+
+  <section>
+    <h2>Sorun çıkarsa</h2>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th class="wrap">Belirti</th><th class="wrap">Sebep ve çözüm</th></tr></thead>
+        <tbody>
+          <tr><td class="wrap">Bir tuş hiç çalışmıyor</td><td class="wrap">Sinyal ve GND kabloları çapraz köşelerde mi bak. Sonra mavi hatta giden kabloyu kontrol et.</td></tr>
+          <tr><td class="wrap">Bir tuş sürekli basılı gibi</td><td class="wrap">İki kablo tuşun aynı kenarında kalmıştır. Çapraz köşelere al.</td></tr>
+          <tr><td class="wrap">Hiçbir tuş çalışmıyor</td><td class="wrap">Karttan mavi hatta giden GND kablosu takılı değildir ya da NC pinine girmiştir.</td></tr>
+          <tr><td class="wrap">Tuşlar karışık</td><td class="wrap">Pin sırasını kartın arka yüzünden okumamışsındır. Ekran yüzünden bakınca sıralar ters görünür.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <h2>Pertinaks sürümü</h2>
+    <p>Breadboard'da her tuş çalıştıktan sonra aynı devre 7×9 cm tek pertinaksa taşınır. Düzen Game Boy gibi dikey: kart üstte yatay durur, USB sağ kenara bakar, tuşlar altta. Bu bir tasarım, henüz denenmedi. Delik delik lehim adımları <a href="https://claude.ai/artifact/VMFygoTegyb297KKMzmKbx">pertinaks lehim rehberinde</a>. Lehimlemeden önce parçaları deliklere kuru oturtup ölç. Tuş ve soket yerleri <a href="https://claude.ai/artifact/X227qUFdsHASdfbypUpouL">3B kutuyla</a> eşleşir, bu yüzden çizimdeki deliklere sadık kal.</p>
+    <div class="draw tall"><svg id="perf" viewBox="0 0 480 610" role="img" aria-label="7 x 9 santimetre pertinaks üzerinde kart, tuş ve buzzer yerleşimi"></svg></div>
+    <p class="cap">Üstten, yani ekran tarafından görünüm. Lehim tarafına çevirince sağ ve sol yer değiştirir. Pin yazıları dişi soketlerin altında kalır, BOOT ve IO14 kartın üstünde kullanılmaya devam eder. Dört 10K direnç lehim tarafına gelir, D-pad bağlantısı breadboard'dakiyle aynıdır.</p>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>Parça</th><th>Adet</th><th class="wrap">Not</th></tr></thead>
+        <tbody>
+          <tr><td>7×9 cm pertinaks</td><td class="mono">1</td><td class="wrap">Alınacak</td></tr>
+          <tr><td>12'li dişi pin soket</td><td class="mono">2</td><td class="wrap">Alınacak. Kart söküp takılabilir kalır, 40'lık şerit kesilebilir.</td></tr>
+          <tr><td>JST-GH 1,25 2 pin kablo</td><td class="mono">1</td><td class="wrap">Alınacak. Pilin soketi yok, kutupları karttaki yazıya göre ölçmeden takma.</td></tr>
+          <tr><td>Sürgülü anahtar</td><td class="mono">1</td><td class="wrap">Alınacak. Pilin artı hattına girer.</td></tr>
+          <tr><td>PCM5102A DAC modülü</td><td class="mono">1</td><td class="wrap">Alınacak. 3,5 mm jaklı olanı seç. Kulaklık buraya takılır, oyun sesi de buradan gelir.</td></tr>
+          <tr><td>microSD → SD adaptörü</td><td class="mono">1</td><td class="wrap">Kartınla geldiyse ek alışveriş yok, tellerini doğrudan lehimlersin.</td></tr>
+          <tr><td>M2×20 vida</td><td class="mono">4</td><td class="wrap">Alınacak. Kutuyu kapatır.</td></tr>
+          <tr><td>Tuş, tel, Li-Po pil</td><td class="mono">var</td><td class="wrap">Sende mevcut. Lehim okul laboratuvarında.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <h2>microSD ve ses bağlantısı</h2>
+    <p>SD adaptörü pertinaksın arkasına alt kenardan taşacak şekilde yapıştırılır, böylece kart takılıp çıkar. 3,3 V ile çalışır, 5 V bağlama. 5 V regülatörlü hazır modül alma: pil ile çalışırken beslemesi güvenilir olmaz.</p>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>SD adaptör pini</th><th>İşlev</th><th>Kart pini</th></tr></thead>
+        <tbody>
+          <tr><td class="mono">1</td><td>CS</td><td class="mono">IO3</td></tr>
+          <tr><td class="mono">2</td><td>MOSI</td><td class="mono">IO43</td></tr>
+          <tr><td class="mono">3 ve 6</td><td>GND</td><td class="mono">G</td></tr>
+          <tr><td class="mono">4</td><td>3,3 V</td><td class="mono">3V</td></tr>
+          <tr><td class="mono">5</td><td>SCK</td><td class="mono">IO44</td></tr>
+          <tr><td class="mono">7</td><td>MISO</td><td class="mono">IO18</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>DAC modül pini</th><th>İşlev</th><th>Kart pini</th></tr></thead>
+        <tbody>
+          <tr><td class="mono">BCK</td><td>Bit saati</td><td class="mono">IO17</td></tr>
+          <tr><td class="mono">LCK</td><td>Kanal saati</td><td class="mono">IO10</td></tr>
+          <tr><td class="mono">DIN</td><td>Ses verisi</td><td class="mono">IO11</td></tr>
+          <tr><td class="mono">VIN</td><td>Besleme</td><td class="mono">3V</td></tr>
+          <tr><td class="mono">GND</td><td>Toprak</td><td class="mono">G</td></tr>
+          <tr><td class="mono">SCK</td><td>Kullanılmıyor</td><td class="mono">G</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="cap">Yazılım bu pinlere hazır. Kart takılı değilse sistem iç hafızadaki oyunlarla açılır. USB-C kulaklık bu kartta çalışmaz, kartın USB soketi kulaklığa güç ve ses veremiyor. 3,5 mm kulaklık kullan. SD ve DAC kısmı donanımda henüz denenmedi.</p>
+  </section>
+</div>
+
+<script>
+// Switches sit on columns c..c+2. `sig` is the upper leg used for the signal, `gnd` the diagonal lower leg.
+const SWITCHES = [
+  { id: "left",   key: "Sol",    c: 1,  sig: 3,  gnd: 1,  color: "--w1" },
+  { id: "right",  key: "Sağ",    c: 5,  sig: 7,  gnd: 5,  color: "--w4" },
+  { id: "up",     key: "Yukarı", c: 8,  sig: 10, gnd: 8,  color: "--w3" },
+  { id: "down",   key: "Aşağı",  c: 12, sig: 14, gnd: 12, color: "--w2" },
+  { id: "select", key: "Select", c: 15, sig: 15, gnd: 17, color: "--w5", pin: "IO21" },
+  { id: "start",  key: "Start",  c: 18, sig: 18, gnd: 20, color: "--w6", pin: "IO16" },
+  { id: "b",      key: "B",      c: 21, sig: 21, gnd: 23, color: "--w7", pin: "IO13" },
+  { id: "a",      key: "A",      c: 24, sig: 24, gnd: 26, color: "--w8", pin: "IO12" },
+];
+const LINKS = [
+  { id: "gnd",  label: "Toprak", part: "Dişi-erkek", path: "Kart G → alt mavi hat" },
+  { id: "v3",   label: "3,3 V", part: "Dişi-erkek", path: "Kart 3V → üst kırmızı hat" },
+  { id: "io2",  label: "Sol/Sağ hattı", part: "Dişi-erkek", path: "Kart IO2 → sütun 4, a sırası" },
+  { id: "io1",  label: "Yukarı/Aşağı hattı", part: "Dişi-erkek", path: "Kart IO1 → sütun 11, a sırası" },
+  { id: "pu2",  label: "Sol/Sağ pull-up", part: "10K", path: "Sütun 4, b sırası → üst kırmızı hat" },
+  { id: "pu1",  label: "Yukarı/Aşağı pull-up", part: "10K", path: "Sütun 11, b sırası → üst kırmızı hat" },
+  { id: "left", label: "Sol", part: "Erkek-erkek", path: "Sütun 4, d sırası → sütun 3, d sırası" },
+  { id: "right", label: "Sağ", part: "10K", path: "Sütun 4, c sırası → sütun 7, c sırası" },
+  { id: "up",   label: "Yukarı", part: "Erkek-erkek", path: "Sütun 11, d sırası → sütun 10, d sırası" },
+  { id: "down", label: "Aşağı", part: "10K", path: "Sütun 11, c sırası → sütun 14, c sırası" },
+  { id: "select", label: "Select", part: "Dişi-erkek", path: "Kart IO21 → sütun 15, c sırası" },
+  { id: "start", label: "Start", part: "Dişi-erkek", path: "Kart IO16 → sütun 18, c sırası" },
+  { id: "b",    label: "B", part: "Dişi-erkek", path: "Kart IO13 → sütun 21, c sırası" },
+  { id: "a",    label: "A", part: "Dişi-erkek", path: "Kart IO12 → sütun 24, c sırası" },
+  { id: "gnds", label: "Tuş toprakları", part: "8 erkek-erkek", path: "h sırası, sütun 1, 5, 8, 12, 17, 20, 23, 26 → alt mavi hat" },
+];
+const BOARD_PINS = {
+  "1":  { id: "io1", name: "Yukarı/Aşağı", color: "--w3" },
+  "2":  { id: "io2", name: "Sol/Sağ", color: "--w1" },
+  "12": { id: "a", name: "A", color: "--w8" },
+  "13": { id: "b", name: "B", color: "--w7" },
+  "16": { id: "start", name: "Start", color: "--w6" },
+  "21": { id: "select", name: "Select", color: "--w5" },
+};
+const LEFT_PINS  = ["3V", "1", "2", "3", "10", "11", "12", "13", "NC", "NC", "G", "5V"];
+const RIGHT_PINS = ["G", "G", "43", "44", "18", "17", "21", "16", "NC", "G", "G", "3V"];
+const NS = "http://www.w3.org/2000/svg";
+
+function el(parent, name, attrs, text) {
+  const n = document.createElementNS(NS, name);
+  for (const k in attrs) n.setAttribute(k, attrs[k]);
+  if (text !== undefined) n.textContent = text;
+  parent.appendChild(n);
+  return n;
+}
+
+function drawBreadboard() {
+  const svg = document.getElementById("bb");
+  const P = 26, X0 = 48, ROW = { a: 122, b: 140, c: 158, d: 176, e: 194, f: 246, g: 264, h: 282, i: 300, j: 318 };
+  const colX = c => X0 + (c - 1) * P;
+  const TOP_POS = 76, TOP_NEG = 94, BOT_NEG = 360, BOT_POS = 378;
+  const group = id => el(svg, "g", { class: "w", "data-id": id });
+  const wire = (g, x1, y1, x2, y2, color) => {
+    el(g, "line", { x1, y1, x2, y2, stroke: color, "stroke-width": 3, "stroke-linecap": "round" });
+    el(g, "circle", { cx: x1, cy: y1, r: 4.5, fill: color });
+    el(g, "circle", { cx: x2, cy: y2, r: 4.5, fill: color });
+  };
+  const resistor = (g, x1, y1, x2, y2) => {
+    wire(g, x1, y1, x2, y2, "var(--fg)");
+    const mx = (x1 + x2) / 2, my = (y1 + y2) / 2;
+    const angle = Math.atan2(y2 - y1, x2 - x1) * 180 / Math.PI;
+    el(g, "rect", { x: mx - 17, y: my - 6, width: 34, height: 12, rx: 3, fill: "var(--accent)", transform: `rotate(${angle} ${mx} ${my})` });
+    el(g, "text", { x: mx, y: my + 4, class: "sm", "text-anchor": "middle", style: "fill:var(--sheet)", transform: `rotate(${Math.abs(angle) > 90 ? angle + 180 : angle} ${mx} ${my})` }, "10K");
+  };
+
+  el(svg, "rect", { x: 16, y: 60, width: 828, height: 336, rx: 8, fill: "var(--bb)", stroke: "var(--bb-edge)" });
+  el(svg, "rect", { x: 16, y: 212, width: 828, height: 16, fill: "var(--bb-edge)" });
+  for (const [y, color] of [[TOP_POS, "--rail-pos"], [TOP_NEG, "--rail-neg"], [BOT_NEG, "--rail-neg"], [BOT_POS, "--rail-pos"]]) {
+    el(svg, "line", { x1: 30, x2: 830, y1: y, y2: y, stroke: `var(${color})`, "stroke-width": 2 });
+    el(svg, "text", { x: 22, y: y + 4, class: "md", style: `fill:var(${color})` }, color === "--rail-pos" ? "+" : "−");
+  }
+  for (let c = 1; c <= 30; c++) {
+    if (c === 1 || c % 5 === 0 || c === 4 || c === 11) el(svg, "text", { x: colX(c), y: 110, class: "sm mut", "text-anchor": "middle" }, c);
+    for (const r in ROW) el(svg, "circle", { cx: colX(c), cy: ROW[r], r: 2.6, fill: "var(--hole)" });
+  }
+  for (const r in ROW) el(svg, "text", { x: 26, y: ROW[r] + 4, class: "sm mut" }, r);
+
+  const grounds = group("gnds");
+  for (const s of SWITCHES) {
+    const g = group(s.id), x = colX(s.c), x2 = colX(s.c + 2), color = `var(${s.color})`;
+    el(g, "rect", { x: x - 7, y: ROW.e - 8, width: 2 * P + 14, height: ROW.f - ROW.e + 16, rx: 3, fill: "var(--sheet)", stroke: "var(--fg)", "stroke-width": 1.4 });
+    for (const [lx, ly] of [[x, ROW.e], [x2, ROW.e], [x, ROW.f], [x2, ROW.f]])
+      el(g, "circle", { cx: lx, cy: ly, r: 3.4, fill: "var(--fg)" });
+    el(g, "text", { x: x + P, y: 224, class: "md", "text-anchor": "middle" }, s.key);
+    wire(grounds, colX(s.gnd), ROW.h, colX(s.gnd), BOT_NEG, "var(--gnd)");
+    if (s.pin) {
+      wire(g, colX(s.sig), ROW.c, colX(s.sig), 48, color);
+      el(g, "text", { x: colX(s.sig), y: 38, class: "md", "text-anchor": "middle", style: `fill:${color}` }, s.pin);
+    }
+  }
+
+  // The D-pad's two shared lines
+  const axis = (idLine, idPull, idDirect, idSeries, col, label, color) => {
+    const x = colX(col), line = group(idLine), pull = group(idPull);
+    wire(line, x, ROW.a, x, 48, `var(${color})`);
+    el(line, "text", { x, y: 38, class: "md", "text-anchor": "middle", style: `fill:var(${color})` }, label);
+    resistor(pull, x, ROW.b, x - 2 * P, TOP_POS);
+    wire(group(idDirect), x, ROW.d, x - P, ROW.d, `var(${color})`);
+    resistor(group(idSeries), x, ROW.c, x + 3 * P, ROW.c);
+  };
+  axis("io2", "pu2", "left", "right", 4, "IO2", "--w1");
+  axis("io1", "pu1", "up", "down", 11, "IO1", "--w3");
+
+  const feed = (id, col, y, label) => {
+    const g = group(id), x = colX(col);
+    wire(g, x, y, x, 48, "var(--gnd)");
+    el(g, "text", { x, y: 38, class: "md", "text-anchor": "middle" }, label);
+  };
+  feed("v3", 28, TOP_POS, "3V");
+  feed("gnd", 30, BOT_NEG, "G");
+}
+
+function drawBoard() {
+  const svg = document.getElementById("board");
+  const bx = 210, by = 20, bw = 200, bh = 580, X_L = bx + 22, X_R = bx + bw - 22, Y0 = 80, STEP = 30;
+  el(svg, "rect", { x: bx, y: by, width: bw, height: bh, rx: 10, fill: "var(--pcb)" });
+  el(svg, "rect", { x: bx + 66, y: 165, width: 68, height: 68, fill: "#00000000", stroke: "var(--silk)", "stroke-width": 1 });
+  el(svg, "text", { x: bx + 100, y: 203, class: "sm silk", "text-anchor": "middle" }, "ESP32-S3");
+  el(svg, "text", { x: bx + 100, y: 330, class: "sm silk", "text-anchor": "middle" }, "ARKA YÜZ");
+  el(svg, "rect", { x: bx + 68, y: 586, width: 64, height: 26, rx: 6, fill: "var(--pad)" });
+  el(svg, "text", { x: bx + 100, y: 633, class: "md", "text-anchor": "middle" }, "USB-C");
+  el(svg, "text", { x: bx + 100, y: 526, class: "sm silk", "text-anchor": "middle" }, "RST");
+
+  const pin = (label, i, isLeft) => {
+    const x = isLeft ? X_L : X_R, y = Y0 + i * STEP;
+    const isPower = label === "3V" || label === "5V";
+    const feedId = isLeft && label === "G" ? "gnd" : isLeft && label === "3V" ? "v3" : null;
+    const info = BOARD_PINS[label] || (feedId ? { id: feedId, name: feedId === "gnd" ? "Toprak" : "3,3 V", color: "--accent" } : null);
+    const g = el(svg, "g", info ? { class: "w", "data-id": info.id } : {});
+    const color = info ? `var(${info.color})` : null;
+    if (color) {
+      const edge = isLeft ? bx - 30 : bx + bw + 30;
+      el(g, "line", { x1: x, y1: y, x2: edge, y2: y, stroke: color, "stroke-width": 3, "stroke-linecap": "round" });
+      el(g, "text", { x: isLeft ? edge - 8 : edge + 8, y: y + 5, class: "md", "text-anchor": isLeft ? "end" : "start", style: `fill:${color}` }, info.name);
+    }
+    el(g, "circle", { cx: x, cy: y, r: 8, fill: color || "var(--pad)", stroke: isPower ? "var(--rail-pos)" : "none", "stroke-width": 2 });
+    el(g, "text", { x: isLeft ? x + 14 : x - 14, y: y + 4, class: "sm silk", "text-anchor": isLeft ? "start" : "end" }, label);
+  };
+  LEFT_PINS.forEach((p, i) => pin(p, i, true));
+  RIGHT_PINS.forEach((p, i) => pin(p, i, false));
+}
+
+function drawPerf() {
+  const svg = document.getElementById("perf");
+  const P = 16, hx = c => 42 + (c - 1) * P, hy = r => 56 + (r - 1) * P;
+  el(svg, "rect", { x: hx(1) - 36, y: hy(1) - 51, width: 23 * P + 72, height: 29 * P + 102, rx: 4, fill: "var(--bb)", stroke: "var(--bb-edge)" });
+  for (let c = 1; c <= 24; c++) for (let r = 1; r <= 30; r++)
+    el(svg, "circle", { cx: hx(c), cy: hy(r), r: 2, fill: "var(--hole)" });
+
+  // T-Display outline: the pins sit nearer the antenna end, the USB end reaches the right edge
+  el(svg, "rect", { x: hx(1.55), y: hy(3.5) - 12, width: 24 * P, height: 9 * P + 24, rx: 5, fill: "var(--pcb)" });
+  el(svg, "rect", { x: hx(3.7), y: hy(5) - 4, width: 17.5 * P, height: 6 * P + 8, fill: "#00000000", stroke: "var(--silk)" });
+  el(svg, "text", { x: hx(12.5), y: hy(8) + 4, class: "md silk", "text-anchor": "middle" }, "EKRAN");
+  el(svg, "rect", { x: hx(25.3), y: hy(7) - 6, width: 12, height: 36, rx: 3, fill: "var(--pad)" });
+  el(svg, "text", { x: hx(25.2), y: hy(8) + 4, class: "sm silk", "text-anchor": "end" }, "USB");
+  el(svg, "text", { x: hx(24.5), y: hy(4) + 2, class: "sm silk", "text-anchor": "end" }, "IO14");
+  el(svg, "text", { x: hx(24.5), y: hy(13) + 6, class: "sm silk", "text-anchor": "end" }, "BOOT");
+
+  const TOP = ["3V", "1", "2", "3", "10", "11", "12", "13", "NC", "NC", "G", "5V"];
+  const BOTTOM = ["G", "G", "43", "44", "18", "17", "21", "16", "NC", "G", "G", "3V"];
+  const USED = new Set(["1", "2", "10", "11", "12", "13", "16", "21", "17", "3", "43", "44", "18"]);
+  const header = (labels, row, y) => labels.forEach((p, i) => {
+    const x = hx(5 + i);
+    el(svg, "circle", { cx: x, cy: hy(row), r: 5, fill: USED.has(p) ? "var(--accent)" : "var(--pad)" });
+    el(svg, "text", { x, y, class: "sm", "text-anchor": "middle" }, p);
+  });
+  header(TOP, 4, hy(1) - 12);
+  header(BOTTOM, 13, hy(15) + 4);
+
+  const sw = (c, r, label) => {
+    el(svg, "rect", { x: hx(c) - 6, y: hy(r) - 6, width: 2 * P + 12, height: 3 * P + 12, rx: 3, fill: "var(--sheet)", stroke: "var(--fg)", "stroke-width": 1.4 });
+    for (const [lc, lr] of [[c, r], [c + 2, r], [c, r + 3], [c + 2, r + 3]])
+      el(svg, "circle", { cx: hx(lc), cy: hy(lr), r: 3, fill: "var(--fg)" });
+    el(svg, "text", { x: hx(c + 1), y: hy(r + 1.5) + 5, class: "md", "text-anchor": "middle" }, label);
+  };
+  sw(4, 16, "▲"); sw(4, 22, "▼"); sw(1, 19, "◀"); sw(7, 19, "▶");
+  sw(15, 20, "B"); sw(20, 18, "A");
+  sw(9, 26, "SEL"); sw(14, 26, "STA");
+
+  el(svg, "rect", { x: hx(17), y: hy(26), width: 7 * P, height: 4 * P, rx: 3, fill: "none", stroke: "var(--muted)", "stroke-dasharray": "4 4" });
+  el(svg, "text", { x: hx(20.5), y: hy(28) + 4, class: "sm mut", "text-anchor": "middle" }, "DAC, arkada");
+  el(svg, "text", { x: hx(1) - 30, y: hy(30) + 72, class: "sm mut" }, "70 mm genişlik, 90 mm yükseklik, 2,54 mm delik aralığı");
+}
+
+function buildTable() {
+  const body = document.getElementById("wires");
+  let done = {};
+  try { done = JSON.parse(localStorage.getItem("kablo-durum-2") || "{}"); } catch (e) {}
+  const save = () => { try { localStorage.setItem("kablo-durum-2", JSON.stringify(done)); } catch (e) {} };
+  const count = () => {
+    document.getElementById("count").textContent = `${LINKS.filter(l => done[l.id]).length} / ${LINKS.length}`;
+  };
+  const highlight = id => {
+    for (const svg of [document.getElementById("bb"), document.getElementById("board")]) {
+      svg.classList.toggle("focus", id !== null);
+      svg.querySelectorAll(".w").forEach(n => n.classList.toggle("on", id === n.dataset.id));
+    }
+    body.querySelectorAll("tr").forEach(tr => tr.classList.toggle("on", id === tr.dataset.id));
+  };
+  let active = null;
+  for (const link of LINKS) {
+    const tr = document.createElement("tr");
+    tr.dataset.id = link.id;
+    tr.tabIndex = 0;
+    tr.classList.toggle("done", !!done[link.id]);
+    tr.innerHTML = `<td class="wrap">${link.label}</td><td>${link.part}</td><td class="wrap mono">${link.path}</td><td></td>`;
+    const btn = document.createElement("button");
+    btn.className = "chk";
+    btn.id = `chk-${link.id}`;
+    btn.type = "button";
+    const paint = () => { btn.textContent = done[link.id] ? "Takıldı" : "Takılmadı"; btn.setAttribute("aria-pressed", !!done[link.id]); };
+    paint();
+    btn.addEventListener("click", e => {
+      e.stopPropagation();
+      done[link.id] = !done[link.id];
+      tr.classList.toggle("done", done[link.id]);
+      paint(); count(); save();
+    });
+    tr.lastElementChild.appendChild(btn);
+    const toggle = () => { active = active === link.id ? null : link.id; highlight(active); };
+    tr.addEventListener("click", toggle);
+    tr.addEventListener("keydown", e => { if (e.target === tr && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); toggle(); } });
+    body.appendChild(tr);
+  }
+  count();
+}
+
+drawBreadboard();
+drawBoard();
+drawPerf();
+buildTable();
+</script>

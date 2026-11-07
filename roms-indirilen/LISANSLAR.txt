@@ -1,0 +1,18 @@
+Tobu Tobu Girl Deluxe (gb/tobudx.gb): MIT - https://github.com/SimonLarsen/tobutobugirl-dx
+Porklike GB (gb/porklike.gb): MIT - https://github.com/binji/porklike.gb
+Shock Lobster (gb/shocklobster.gb): ZLib - https://github.com/tbsp/shock-lobster
+2048gb (gb/2048.gb): Zlib - https://github.com/Sanqui/2048-gb
+Rex Runner GB (gb/rex-runner.gb): MIT - https://github.com/etdv-thevoid/rex-runner-gb
+Unstoppable Knight (gb/knight2.gb): MIT - https://github.com/Rafagars/Unstoppable-Knight-GB
+Dawn Will Come (gb/DawnWillCome.gb): MIT / CC-BY-4.0 (Assets) - https://github.com/eishiya/DawnWillCome
+WYRMHOLE (gb/Wyrmhole.gb): MIT - https://github.com/QuinnPainter/Wyrmhole
+Libbet and the Magic Floor (gb/libbet.gb): Zlib - https://github.com/pinobatch/libbet
+GB Corp. (gb/gbcorp.gb): MIT - https://github.com/drludos/GBcorp
+uCity (gbc/ucity.gbc): GPL-3.0-or-later - https://github.com/AntonioND/ucity
+CatMario-GB (gbc/catmario-gb.gbc): MIT - https://github.com/zzxzzk115/CatMarioGB
+Aevilia (gbc/aevilia.gbc): Apache-2.0 - https://github.com/ISSOtm/Aevilia-GB
+GBCspelunky (gbc/GBCspelunky.gbc): CC-BY ish - https://github.com/sukus21/GBC-spelunky
+Nova the Squirrel (nes/nova.nes): GPL-3.0-or-later - https://github.com/NovaSquirrel/NovaTheSquirrel
+Thwaite (nes/thwaite128.nes): GPL-3.0-or-later - https://github.com/pinobatch/thwaite-nes
+Concentration Room (nes/croom.nes): GPL-3.0-or-later - https://github.com/pinobatch/croom-nes
+RHDE: Furniture Fight (nes/rhde.nes): FSFAP - https://github.com/pinobatch/rhde-nes

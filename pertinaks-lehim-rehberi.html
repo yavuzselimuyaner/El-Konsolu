@@ -1,0 +1,358 @@
+<title>Pertinaks Lehim Rehberi</title>
+<meta charset="utf-8">
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<style>
+/* Layout: a bench sheet. Two board views side by side, the numbered steps drive what they highlight. */
+:root {
+  --bg: #e9eef0; --sheet: #f7f9fa; --fg: #17242b; --muted: #55666f; --line: #c6d1d6; --accent: #0a6b5e;
+  --warn: #a4400f; --warn-bg: #fbeadf;
+  --perf: #d9c79c; --pad: #b8782e; --hole: #4a3a20; --part: #f7f9fa; --pcb: #1a2529;
+  --gnd: #27343a; --v3: #c7372f; --sig: #2a62c9; --dpad: #7a4fd0; --mod: #0f8f6f; --res: #b0442f;
+  --display: "Barlow Condensed", "Arial Narrow", sans-serif;
+  --body: "IBM Plex Sans", "Segoe UI", sans-serif;
+  --mono: "IBM Plex Mono", Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #11181b; --sheet: #182226; --fg: #e4ecee; --muted: #9db0b7; --line: #31424a; --accent: #4fd0ba;
+    --warn: #f5a877; --warn-bg: #3a2418; --perf: #5a4a2c; --pad: #d59a52; --hole: #1d150a; --part: #233038; --pcb: #0b1113;
+    --gnd: #c8d4d8; --v3: #ef7a72; --sig: #7fa7f5; --dpad: #a98bf0; --mod: #3fd3a6; --res: #ed8267;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #11181b; --sheet: #182226; --fg: #e4ecee; --muted: #9db0b7; --line: #31424a; --accent: #4fd0ba;
+  --warn: #f5a877; --warn-bg: #3a2418; --perf: #5a4a2c; --pad: #d59a52; --hole: #1d150a; --part: #233038; --pcb: #0b1113;
+  --gnd: #c8d4d8; --v3: #ef7a72; --sig: #7fa7f5; --dpad: #a98bf0; --mod: #3fd3a6; --res: #ed8267;
+  color-scheme: dark;
+}
+body { background: var(--bg); color: var(--fg); font: 400 16px/1.55 var(--body); }
+.page {
+  max-width: 1080px; margin: 0 auto; padding-block: 32px 64px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  display: grid; gap: 40px;
+}
+h1, h2, h3 { font-family: var(--display); font-weight: 700; line-height: 1.08; text-wrap: balance; margin: 0; }
+h1 { font-size: clamp(2.5rem, 7vw, 4rem); }
+h2 { font-size: 1.9rem; }
+h3 { font-size: 1.35rem; }
+p { margin: 0; max-width: 70ch; }
+.intro, section { display: grid; gap: 12px; min-width: 0; }
+.lede { font-size: 1.12rem; color: var(--muted); }
+.warn { background: var(--warn-bg); color: var(--warn); padding: 12px 14px; border-radius: 4px; font-weight: 500; max-width: 76ch; }
+.views { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; position: sticky; top: env(safe-area-inset-top, 0px); z-index: 2; background: var(--bg); padding-block: 8px; }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--bg); }
+.view { background: var(--sheet); border: 1px solid var(--line); border-radius: 4px; padding: 8px; display: grid; gap: 4px; min-width: 0; }
+.view h3 { font-size: 1.05rem; color: var(--muted); }
+.view svg { width: 100%; height: auto; max-height: 46vh; display: block; }
+svg text { font-family: var(--mono); fill: var(--fg); font-size: 9px; }
+svg .lbl { font-size: 10px; font-weight: 600; }
+svg .mut { fill: var(--muted); }
+svg .it { transition: opacity .15s; }
+svg.focus .it:not(.on) { opacity: .12; }
+@media (prefers-reduced-motion: reduce) { svg .it { transition: none; } }
+@media (max-width: 700px) { .views { position: static; } .view svg { max-height: none; } }
+.parts { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 2px 28px; margin: 0; padding: 0; list-style: none; }
+.parts li { display: flex; justify-content: space-between; gap: 12px; border-bottom: 1px solid var(--line); padding: 7px 0; }
+.parts b { font-family: var(--mono); font-weight: 600; }
+ol.steps { margin: 0; padding: 0; list-style: none; display: grid; gap: 10px; counter-reset: step; }
+ol.steps > li { counter-increment: step; background: var(--sheet); border: 1px solid var(--line); border-radius: 4px; padding: 12px 14px; display: grid; gap: 8px; cursor: pointer; }
+ol.steps > li.on { border-color: var(--accent); box-shadow: inset 3px 0 0 var(--accent); }
+ol.steps > li.done h3 { color: var(--muted); text-decoration: line-through; }
+.head { display: flex; gap: 12px; align-items: baseline; justify-content: space-between; flex-wrap: wrap; }
+.head h3::before { content: counter(step) ". "; color: var(--accent); }
+.steps ul { margin: 0; padding-left: 1.2em; display: grid; gap: 4px; }
+.mono { font-family: var(--mono); font-weight: 600; font-size: .92rem; }
+.chk { font: 500 .85rem var(--body); color: var(--accent); background: none; border: 1px solid var(--accent); border-radius: 4px; padding: 3px 9px; cursor: pointer; }
+.chk[aria-pressed="true"] { background: var(--accent); color: var(--sheet); }
+.chk:focus-visible, ol.steps > li:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.tablewrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 4px; background: var(--sheet); }
+table { border-collapse: collapse; width: 100%; }
+th { font-family: var(--display); font-size: 1rem; letter-spacing: .03em; text-align: left; color: var(--muted); font-weight: 600; }
+th, td { padding: 6px 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
+tr:last-child td { border-bottom: 0; }
+.key { display: flex; flex-wrap: wrap; gap: 6px 18px; font-size: .9rem; color: var(--muted); }
+.key span::before { content: ""; display: inline-block; width: 14px; height: 4px; border-radius: 2px; margin-right: 6px; vertical-align: 3px; background: var(--c); }
+</style>
+
+<div class="page">
+  <header class="intro">
+    <h1>Pertinaks lehim rehberi</h1>
+    <p class="lede">Breadboard'da çalışan devreyi 7×9 cm pertinaksa taşımak için sırayla yapılacaklar. Bir adıma dokununca o adımın parçaları ve telleri çizimlerde öne çıkar.</p>
+  </header>
+
+  <p class="warn">Bu yerleşim bir tasarım, gerçek pertinaksta henüz denenmedi. Lehimlemeden önce bütün parçaları deliklere kuru oturt ve ölç. Kart takılıyken lehim yapma, USB ve pil hep çıkık olsun.</p>
+
+  <section>
+    <h2>Delikleri sayma</h2>
+    <p>Pertinaksı parçaların takıldığı yüzü sana bakacak, uzun kenarı dikey duracak şekilde tut. Sol üst köşedeki delik <span class="mono">(1,1)</span>. İlk sayı sütun (soldan sağa 1–24), ikinci sayı sıra (yukarıdan aşağı 1–30). Pertinaksı ters çevirince lehim yüzünde sol ve sağ yer değiştirir; sağdaki çizim bunu hesaba katarak çizildi.</p>
+    <div class="key">
+      <span style="--c:var(--gnd)">GND</span>
+      <span style="--c:var(--v3)">3,3 V</span>
+      <span style="--c:var(--sig)">Tuş sinyali</span>
+      <span style="--c:var(--dpad)">D-pad hattı</span>
+      <span style="--c:var(--mod)">Ses ve SD modülü</span>
+    </div>
+  </section>
+
+  <div class="views">
+    <div class="view"><h3>Parça yüzü (ekran tarafı)</h3><svg id="top" viewBox="0 0 500 610" role="img" aria-label="Pertinaksın parça yüzü"></svg></div>
+    <div class="view"><h3>Lehim yüzü (arka taraf, aynalı)</h3><svg id="bottom" viewBox="0 0 500 610" role="img" aria-label="Pertinaksın lehim yüzü ve teller"></svg></div>
+  </div>
+
+  <section>
+    <h2>Malzeme</h2>
+    <ul class="parts">
+      <li>7×9 cm pertinaks <b>1</b></li>
+      <li>12'li dişi soket <b>2</b></li>
+      <li>6×6 tuş <b>8</b></li>
+      <li>10K direnç <b>4</b></li>
+      <li>İnce yalıtımlı tel <b>~1,5 m</b></li>
+      <li>Havya, lehim teli <b>1</b></li>
+    </ul>
+    <p>Tel için kesilmiş jumper kabloları ya da eski bir ağ kablosunun içindeki ince teller iş görür. Her tel yalıtımlı olsun, uçlarından sadece 2–3 mm soy. Multimetre yoksa okul laboratuvarındakini kullan; kısa devre testi atlanmamalı.</p>
+  </section>
+
+  <section>
+    <h2>Adımlar</h2>
+    <ol class="steps" id="steps"></ol>
+    <p class="mono" style="color:var(--muted)" id="progress"></p>
+  </section>
+
+  <section>
+    <h2>Tüm teller</h2>
+    <p>Lehim yüzünde, yalıtımlı tellerle yapılacak bağlantıların listesi. Koordinatlar parça yüzüne göre verildi.</p>
+    <div class="tablewrap"><table>
+      <thead><tr><th>Adım</th><th>Nereden</th><th>Nereye</th><th>Ne</th></tr></thead>
+      <tbody id="wires"></tbody>
+    </table></div>
+  </section>
+</div>
+
+<script>
+const P = 18, X0 = 40, Y0 = 44;
+const px = (c, mirror) => X0 + ((mirror ? 25 - c : c) - 1) * P;
+const py = r => Y0 + (r - 1) * P;
+const NS = "http://www.w3.org/2000/svg";
+function el(parent, name, attrs, text) {
+  const n = document.createElementNS(NS, name);
+  for (const k in attrs) n.setAttribute(k, attrs[k]);
+  if (text !== undefined) n.textContent = text;
+  parent.appendChild(n);
+  return n;
+}
+
+const TOP_PINS = ["3V", "1", "2", "3", "10", "11", "12", "13", "NC", "NC", "G", "5V"];
+const BOTTOM_PINS = ["G", "G", "43", "44", "18", "17", "21", "16", "NC", "G", "G", "3V"];
+
+// Each switch: legs at (c,r) (c+2,r) (c,r+3) (c+2,r+3). Signal on the upper-left leg, GND on the lower-right.
+const SWITCHES = [
+  { key: "Yukarı", c: 4, r: 16 }, { key: "Aşağı", c: 4, r: 22 },
+  { key: "Sol", c: 1, r: 19 },    { key: "Sağ", c: 7, r: 19 },
+  { key: "A", c: 20, r: 18 },     { key: "B", c: 15, r: 20 },
+  { key: "Select", c: 9, r: 26 }, { key: "Start", c: 14, r: 26 },
+];
+const RESISTORS = [
+  { name: "R1", c: 1, r0: 5, r1: 9, note: "Yukarı/Aşağı pull-up" },
+  { name: "R2", c: 2, r0: 5, r1: 9, note: "Sol/Sağ pull-up" },
+  { name: "R3", c: 3, r0: 5, r1: 9, note: "Aşağı seri direnci" },
+  { name: "R4", c: 4, r0: 5, r1: 9, note: "Sağ seri direnci" },
+];
+// [step, from, to, colour, what]
+const WIRES = [
+  ["gnd", [6, 13], [6, 19], "--gnd", "Kart G → Yukarı GND"],
+  ["gnd", [6, 19], [3, 22], "--gnd", "Yukarı GND → Sol GND"],
+  ["gnd", [3, 22], [6, 25], "--gnd", "Sol GND → Aşağı GND"],
+  ["gnd", [6, 25], [9, 22], "--gnd", "Aşağı GND → Sağ GND"],
+  ["gnd", [9, 22], [11, 29], "--gnd", "Sağ GND → Select GND"],
+  ["gnd", [11, 29], [16, 29], "--gnd", "Select GND → Start GND"],
+  ["gnd", [16, 29], [17, 23], "--gnd", "Start GND → B GND"],
+  ["gnd", [17, 23], [22, 21], "--gnd", "B GND → A GND"],
+  ["sig", [11, 4], [20, 18], "--sig", "IO12 → A"],
+  ["sig", [12, 4], [15, 20], "--sig", "IO13 → B"],
+  ["sig", [11, 13], [9, 26], "--sig", "IO21 → Select"],
+  ["sig", [12, 13], [14, 26], "--sig", "IO16 → Start"],
+  ["dpad", [1, 5], [2, 5], "--v3", "R1 ve R2 üst bacak köprüsü (lehimle birleştir)"],
+  ["dpad", [2, 5], [5, 4], "--v3", "Köprü → kart 3V"],
+  ["dpad", [6, 4], [3, 5], "--dpad", "IO1 → R3 üst bacak"],
+  ["dpad", [3, 5], [1, 9], "--dpad", "R3 üst bacak → R1 alt bacak"],
+  ["dpad", [1, 9], [4, 16], "--dpad", "R1 alt bacak → Yukarı sinyal"],
+  ["dpad", [3, 9], [4, 22], "--dpad", "R3 alt bacak → Aşağı sinyal"],
+  ["dpad", [7, 4], [4, 5], "--dpad", "IO2 → R4 üst bacak"],
+  ["dpad", [4, 5], [2, 9], "--dpad", "R4 üst bacak → R2 alt bacak"],
+  ["dpad", [2, 9], [1, 19], "--dpad", "R2 alt bacak → Sol sinyal"],
+  ["dpad", [4, 9], [7, 19], "--dpad", "R4 alt bacak → Sağ sinyal"],
+];
+// Wires that leave the board for the modules lying in the back cover
+const MODULE_WIRES = [
+  ["dac", [10, 13], "DAC BCK", "IO17"], ["dac", [9, 4], "DAC LCK", "IO10"], ["dac", [10, 4], "DAC DIN", "IO11"],
+  ["dac", [16, 13], "DAC VIN", "3V"], ["dac", [15, 13], "DAC GND", "G"], ["dac", [14, 13], "DAC SCK", "G"],
+  ["sd", [8, 4], "SD 1 CS", "IO3"], ["sd", [7, 13], "SD 2 MOSI", "IO43"], ["sd", [8, 13], "SD 5 SCK", "IO44"],
+  ["sd", [9, 13], "SD 7 MISO", "IO18"], ["sd", [16, 13], "SD 4 VDD", "3V"], ["sd", [5, 13], "SD 3 ve 6 GND", "G"],
+];
+
+const STEPS = [
+  { id: "dry", title: "Kuru deneme", show: ["socket", "switch", "res"], items: [
+    "Soketleri, 8 tuşu ve 4 direnci lehimlemeden deliklerine yerleştir.",
+    "Tuşların bacakları 2 sütun genişlikte ve 3 sıra yükseklikte deliklere oturmalı. Oturmuyorsa tuşu 90 derece çevir.",
+    "Kutunun deneme plakası basıldıysa soketlere kartı tak, plakayı üstüne koy ve ekran ile tuş deliklerinin hizasına bak." ] },
+  { id: "socket", title: "Dişi soketler", show: ["socket"], items: [
+    "Soketleri 4. ve 13. sıraya, 5. ile 16. sütunlar arasına tak.",
+    "Hizalamak için kartı soketlere tak, her soketin iki uç pinini lehimle, sonra kartı çıkar ve kalan pinleri lehimle.",
+    "Komşu pinler arasında lehim köprüsü kalmadığını büyüteç ya da telefon kamerasıyla kontrol et." ] },
+  { id: "switch", title: "Tuşlar", show: ["switch"], items: [
+    "8 tuşu çizimdeki yerlerine dik ve pertinaksa yaslı olacak şekilde lehimle.",
+    "Önce her tuşun bir bacağını lehimle, düz durduğunu gör, sonra diğer üçünü lehimle." ] },
+  { id: "res", title: "Dirençler", show: ["res"], items: [
+    "Dört 10K direnci 1., 2., 3. ve 4. sütunlarda 5. ile 9. sıra arasına yatık tak. Bu bölge kartın altında kalır, yükseklik sorun değil.",
+    "Bacakları lehim yüzünde 2–3 mm bırakıp kes. Üst bacaklar 5. sırada yan yana; yalnızca R1 ile R2 birleşecek, R2 ile R3 arasında lehim köprüsü kalmasın." ] },
+  { id: "gnd", title: "GND zinciri", show: ["gnd"], items: [
+    "Kartın G pininden başlayıp sekiz tuşun GND bacağını sırayla bağla. Her tuş bacağına iki tel gelir: biri gelen, biri giden.",
+    "Tellerin uçlarını pedin üstüne yatırıp lehimle, bacağın ucuna sarma." ] },
+  { id: "sig", title: "A, B, Start, Select sinyalleri", show: ["sig"], items: [
+    "Dört teli soket pinlerinden tuşların sinyal bacaklarına çek.",
+    "Teller T-Display'in altından geçebilir, lehim yüzü serbest." ] },
+  { id: "dpad", title: "D-pad direnç ağı", show: ["dpad", "res"], items: [
+    "Önce R1 ve R2'nin üst bacaklarını lehimle birleştir, sonra köprüyü 3V pinine bağla.",
+    "IO1 hattı: IO1 → R3 üst → R1 alt → Yukarı sinyali, ayrıca R3 alt → Aşağı sinyali.",
+    "IO2 hattı: IO2 → R4 üst → R2 alt → Sol sinyali, ayrıca R4 alt → Sağ sinyali." ] },
+  { id: "test", title: "Kısa devre testi", show: [], items: [
+    "Multimetreyi süreklilik (bip) konumuna al.",
+    "3V ile G arasında bip olmamalı. Bip varsa karta takma, köprüyü bul.",
+    "Her tuşta sinyal bacağı ile G arasında: bırakınca bip yok, basınca bip var.",
+    "D-pad'de IO1 pini ile G arasında Yukarı'ya basınca bip olmalı, Aşağı'ya basınca bip olmaz, 10K okunur." ] },
+  { id: "power", title: "İlk çalıştırma", show: [], items: [
+    "Kartı soketlere tak, USB'yi bağla.",
+    "Menünün kendi kendine kaymadığını ve her tuşun çalıştığını dene. Sorun olursa bana logu okutmak için USB takılı kalsın." ] },
+  { id: "dac", title: "Ses modülü (DAC)", show: ["dac"], items: [
+    "Modülün arkasındaki dört lehim köprüsünü ayarla: 1 L, 2 L, 3 H, 4 L. Kendi modülünün üzerindeki yazıyla karşılaştır.",
+    "Altı teli lehim yüzündeki soket pinlerinden modüle çek. Modül arka kapakta yatık durur, jak alt duvardaki deliğe bakar; tel boyunu ona göre ayarla.",
+    "Kulaklıkla bir oyun veya şarkı dene." ] },
+  { id: "sd", title: "microSD adaptörü", show: ["sd"], items: [
+    "SD adaptörünün pinlerine altı tel lehimle, 3 ve 6 numaralı GND pinlerini birbirine bağla.",
+    "Adaptör arka kapağın tabanında yatar, kart alt duvardaki yuvadan takılır.",
+    "Kartı FAT32 biçimle, oyunları ve roms/music klasörünü kopyala, açılış logunda SD'nin bulunduğunu kontrol et." ] },
+  { id: "battery", title: "Pil ve anahtar", show: [], items: [
+    "Pil kablosunun hangi telinin artı olduğunu kartın soketindeki işaretle ve multimetreyle doğrula. Ters bağlanan pil kartı yakar.",
+    "Pilin artı telini sürgülü anahtarın orta bacağına, anahtarın yan bacağını soket kablosunun artısına lehimle. Eksi tel doğrudan gider.",
+    "Lehimleri makaron ya da bantla yalıt, pili arka kapağa çift taraflı bantla yapıştır." ] },
+  { id: "case", title: "Kutuya yerleştirme", show: [], items: [
+    "Ön kapağı yüzü aşağı koy, D-pad'i ve tuş başlıklarını deliklerine yerleştir.",
+    "Pertinaksı kart takılı halde üstüne oturt, arka kapağı kapatıp dört M2×20 vidayla sık." ] },
+];
+
+const stepOf = new Map();
+function drawBoard(svg, mirror) {
+  el(svg, "rect", { x: X0 - 22, y: Y0 - 30, width: 23 * P + 44, height: 29 * P + 60, rx: 4, fill: "var(--perf)" });
+  for (let c = 1; c <= 24; c++) {
+    if (c === 1 || c % 5 === 0 || c === 24) el(svg, "text", { x: px(c, mirror), y: Y0 - 16, "text-anchor": "middle", class: "mut" }, c);
+    for (let r = 1; r <= 30; r++) {
+      el(svg, "circle", { cx: px(c, mirror), cy: py(r), r: 4.6, fill: mirror ? "var(--pad)" : "none", stroke: mirror ? "none" : "var(--pad)", "stroke-width": 1.4 });
+      el(svg, "circle", { cx: px(c, mirror), cy: py(r), r: 1.6, fill: "var(--hole)" });
+    }
+  }
+  for (let r = 1; r <= 30; r++)
+    if (r === 1 || r % 5 === 0 || r === 30) el(svg, "text", { x: mirror ? px(24, true) - 14 : X0 - 14, y: py(r) + 3, "text-anchor": "middle", class: "mut" }, r);
+
+  const group = id => el(svg, "g", { class: "it", "data-step": id });
+
+  // T-Display outline, it sits above the sockets on the part side
+  if (!mirror) el(svg, "rect", { x: px(1.55), y: py(3.5) - 12, width: 24 * P, height: 9 * P + 24, rx: 6, fill: "none", stroke: "var(--muted)", "stroke-dasharray": "5 4" });
+  if (!mirror) el(svg, "text", { x: px(13), y: py(8.5) + 3, "text-anchor": "middle", class: "mut" }, "T-Display bunun üstüne oturur");
+
+  const sock = group("socket");
+  for (const [row, pins] of [[4, TOP_PINS], [13, BOTTOM_PINS]]) {
+    if (!mirror) el(sock, "rect", { x: px(5) - 8, y: py(row) - 8, width: 11 * P + 16, height: 16, rx: 2, fill: "var(--pcb)" });
+    pins.forEach((p, i) => {
+      el(sock, "circle", { cx: px(5 + i, mirror), cy: py(row), r: 3.4, fill: mirror ? "var(--fg)" : "var(--pad)" });
+      el(sock, "text", { x: px(5 + i, mirror), y: py(row) + (row === 4 ? -12 : 19), "text-anchor": "middle", class: "lbl" }, p);
+    });
+  }
+
+  const sw = group("switch");
+  for (const s of SWITCHES) {
+    const legs = [[s.c, s.r], [s.c + 2, s.r], [s.c, s.r + 3], [s.c + 2, s.r + 3]];
+    if (!mirror) {
+      el(sw, "rect", { x: px(s.c) - 7, y: py(s.r) - 2, width: 2 * P + 14, height: 3 * P + 4, rx: 3, fill: "var(--part)", stroke: "var(--fg)" });
+      el(sw, "circle", { cx: px(s.c + 1), cy: py(s.r + 1.5), r: 7, fill: "none", stroke: "var(--fg)" });
+    }
+    legs.forEach(([c, r], i) => el(sw, "circle", { cx: px(c, mirror), cy: py(r), r: 3.4, fill: i === 0 ? "var(--sig)" : i === 3 ? "var(--gnd)" : "var(--fg)" }));
+    el(sw, "text", { x: px(s.c + 1, mirror), y: py(s.r) - 6, "text-anchor": "middle", class: "lbl" }, s.key);
+  }
+
+  const res = group("res");
+  for (const r of RESISTORS) {
+    el(res, "line", { x1: px(r.c, mirror), y1: py(r.r0), x2: px(r.c, mirror), y2: py(r.r1), stroke: "var(--fg)", "stroke-width": 1.6 });
+    if (!mirror) el(res, "rect", { x: px(r.c) - 4, y: py(r.r0 + 1.1), width: 8, height: 2 * P - 4, rx: 3, fill: "var(--res)" });
+    el(res, "circle", { cx: px(r.c, mirror), cy: py(r.r0), r: 3.4, fill: "var(--res)" });
+    el(res, "circle", { cx: px(r.c, mirror), cy: py(r.r1), r: 3.4, fill: "var(--res)" });
+    el(res, "text", { x: px(r.c, mirror), y: py(r.r1) + 15, "text-anchor": "middle", class: "lbl" }, r.name);
+  }
+
+  if (mirror) {
+    for (const [step, a, b, color] of WIRES) {
+      const g = group(step);
+      const bridge = Math.abs(a[0] - b[0]) + Math.abs(a[1] - b[1]) === 1;
+      el(g, "line", { x1: px(a[0], true), y1: py(a[1]), x2: px(b[0], true), y2: py(b[1]), stroke: `var(${color})`, "stroke-width": bridge ? 7 : 2.6, "stroke-linecap": "round", opacity: 0.9 });
+      for (const [c, r] of [a, b]) el(g, "circle", { cx: px(c, true), cy: py(r), r: 3.6, fill: `var(${color})` });
+    }
+    for (const [step, [c, r], label] of MODULE_WIRES) {
+      const g = group(step), x = px(c, true), down = r === 13 ? 1 : -1;
+      el(g, "line", { x1: x, y1: py(r), x2: x, y2: py(r) + down * 14, stroke: "var(--mod)", "stroke-width": 2.6, "stroke-linecap": "round" });
+      el(g, "circle", { cx: x, cy: py(r), r: 3.6, fill: "var(--mod)" });
+    }
+  }
+}
+
+function build() {
+  const top = document.getElementById("top"), bottom = document.getElementById("bottom");
+  drawBoard(top, false);
+  drawBoard(bottom, true);
+
+  const tbody = document.getElementById("wires");
+  const stepIndex = Object.fromEntries(STEPS.map((s, i) => [s.id, i + 1]));
+  for (const [step, a, b, , what] of WIRES)
+    tbody.insertAdjacentHTML("beforeend", `<tr><td class="mono">${stepIndex[step]}</td><td class="mono">(${a})</td><td class="mono">(${b})</td><td>${what}</td></tr>`);
+  for (const [step, [c, r], label, pin] of MODULE_WIRES)
+    tbody.insertAdjacentHTML("beforeend", `<tr><td class="mono">${stepIndex[step]}</td><td class="mono">(${c},${r}) ${pin}</td><td>${label}</td><td>Modüle giden tel</td></tr>`);
+
+  let done = {};
+  try { done = JSON.parse(localStorage.getItem("lehim-adimlari") || "{}"); } catch (e) {}
+  const save = () => { try { localStorage.setItem("lehim-adimlari", JSON.stringify(done)); } catch (e) {} };
+  const list = document.getElementById("steps");
+  const progress = () => { document.getElementById("progress").textContent = `${STEPS.filter(s => done[s.id]).length} / ${STEPS.length} adım tamam. İşaretler yalnızca bu tarayıcıda saklanır.`; };
+  let active = null;
+  const highlight = step => {
+    for (const svg of [top, bottom]) {
+      svg.classList.toggle("focus", !!(step && step.show.length));
+      svg.querySelectorAll(".it").forEach(n => n.classList.toggle("on", !!step && step.show.includes(n.dataset.step)));
+    }
+    list.querySelectorAll("li[data-id]").forEach(li => li.classList.toggle("on", !!step && li.dataset.id === step.id));
+  };
+
+  for (const s of STEPS) {
+    const li = document.createElement("li");
+    li.dataset.id = s.id;
+    li.tabIndex = 0;
+    li.classList.toggle("done", !!done[s.id]);
+    li.innerHTML = `<div class="head"><h3>${s.title}</h3></div><ul>${s.items.map(t => `<li>${t}</li>`).join("")}</ul>`;
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "chk";
+    btn.id = `adim-${s.id}`;
+    const paint = () => { btn.textContent = done[s.id] ? "Tamam" : "Yapılmadı"; btn.setAttribute("aria-pressed", !!done[s.id]); };
+    paint();
+    btn.addEventListener("click", e => { e.stopPropagation(); done[s.id] = !done[s.id]; li.classList.toggle("done", done[s.id]); paint(); progress(); save(); });
+    li.querySelector(".head").appendChild(btn);
+    const toggle = () => { active = active === s ? null : s; highlight(active); };
+    li.addEventListener("click", toggle);
+    li.addEventListener("keydown", e => { if (e.target === li && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); toggle(); } });
+    list.appendChild(li);
+  }
+  progress();
+}
+build();
+</script>
