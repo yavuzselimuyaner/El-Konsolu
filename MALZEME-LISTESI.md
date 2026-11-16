@@ -1,6 +1,7 @@
 # Malzeme Listesi
 
-Projenin tamamında kullanılacak her şey: sende olanlar ve alınacaklar. Fiyatlar ve stok 2 Kasım 2026 aramasından, kargo hariç. Almadan önce sayfadan kontrol et.
+Projenin tamamında kullanılacak her şey: sende olanlar ve alınacaklar.
+Tek bir siteden toplu alım yapmak için hazırlanmış doğrudan bağlantılı liste: [ROBO90-SIPARIS-LISTESI.md](ROBO90-SIPARIS-LISTESI.md)
 
 ## Sende olanlar
 
