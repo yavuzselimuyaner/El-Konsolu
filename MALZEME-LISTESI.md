@@ -1,7 +1,6 @@
 # Malzeme Listesi
 
-Projenin tamamında kullanılacak her şey: sende olanlar ve alınacaklar.
-Eksik tüm parçaları (havya seti ve multimetre dahil) tek platform üzerinden doğrulanmış canlı linklerle almak için: [TRENDYOL-SIPARIS-LISTESI.md](TRENDYOL-SIPARIS-LISTESI.md)
+Projenin tamamında kullanılacak her şey: sende olanlar ve alınacaklar. Fiyatlar ve stok 2 Kasım 2026 aramasından, kargo hariç. Almadan önce sayfadan kontrol et.
 
 ## Sende olanlar
 
