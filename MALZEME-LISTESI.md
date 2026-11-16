@@ -1,7 +1,7 @@
 # Malzeme Listesi
 
 Projenin tamamında kullanılacak her şey: sende olanlar ve alınacaklar.
-Tek bir siteden toplu alım yapmak için hazırlanmış doğrudan bağlantılı liste: [ROBO90-SIPARIS-LISTESI.md](ROBO90-SIPARIS-LISTESI.md)
+Eksik tüm parçaları (havya seti ve multimetre dahil) tek platform üzerinden doğrulanmış canlı linklerle almak için: [TRENDYOL-SIPARIS-LISTESI.md](TRENDYOL-SIPARIS-LISTESI.md)
 
 ## Sende olanlar
 
