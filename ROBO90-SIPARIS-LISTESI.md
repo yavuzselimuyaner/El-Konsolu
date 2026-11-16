@@ -1,45 +1,35 @@
-# Robo90 Tek Sepet Sipariş Listesi
+# Robo90 Sipariş ve Stok Durumu Listesi
 
-Bu liste, LilyGO T-Display S3 tabanlı El Konsolu ve MP3 Çalar projesinin donanım montajı, lehimleme ekipmanları (havya seti, multimetre) ve bağlantı kabloları için doğrudan Robo90 üzerindeki doğrulanmış ürün sayfalarını içerir.
+Robo90 (robo90.com) üzerinde canlı tarayıcı kontrolü yapılmış, stokta olan ürünlerin doğrudan çalışan linkleri ve sitede tükenmiş olan parçaların durumu aşağıda netleştirilmiştir.
 
 ---
 
-## 1. Elektronik Devre Elemanları ve Modüller
+## 1. Robo90 Üzerinde Stokta Olan ve Çalışan Ürünler
 
-| # | Malzeme | Amaç | Doğrudan Ürün Linki |
+Aşağıdaki bağlantıların tamamı canlı sitede test edilmiş olup 404 vermez ve doğrudan sepete eklenebilir:
+
+| # | Malzeme | Durum | Canlı Ürün Linki |
 |---|---|---|---|
-| 1 | **PCM5102A I2S DAC Dekoder Modül** | Oyun ve müzik ses çıkışı (3.5 mm kulaklık jaklı) | [Ürüne Git](https://www.robo90.com/pcm5102a-i2s-dac-dekoder-modul) |
-| 2 | **7×9 cm Tek Yüzlü Delikli Pertinaks** | Devre elemanları ve tuşların lehimleneceği taban kart | [Ürüne Git](https://www.robo90.com/7x9-cm-tek-yuzlu-delikli-pertinaks-prototip-pcb-bakir-plaket-pertinaks-robo90-robo90-33116-27-B) |
-| 3 | **40 Pin 2.54 mm Tek Sıra Dişi Header** | T-Display S3 kartı soketi için (kesilerek 2 adet 12'li yapılır) | [Ürüne Git](https://www.robo90.com/40-pin-254-mm-tek-sira-disi-header-siyah-konnektor-klemens-header-robo90-robo90-39897-40-B) |
-| 4 | **Mini Sürgülü Switch (3 Pin / SPDT)** | Pil açma / kapama anahtarı (180 derece slide) | [Ürüne Git](https://www.robo90.com/mini-surgulu-on-off-switch-180-derece-slide-3-pin-buton-switch-anahtar-robo90-robo90-41689-89-B) |
-| 5 | **Mikro SD Hafıza Kart Adaptör Kılıfı** | 3B baskı kasanın alt yarığına oturan ve arkasına tel lehimlenen kılıf | [Ürüne Git](https://www.robo90.com/mikro-sd-hafiza-kart-adaptoru-raspberry-pi-aksesuar-robo90-robo90-45226-30-B) |
-| 5b | *(Yedek Alternatif)* **Micro SD Kart Modülü (SPI)** | Kılıf yerine hazır PCB slot tercih edilirse | [Ürüne Git](https://www.robo90.com/micro-sd-kart-okuyucu-modulu-arduino-uyumlu-donusturucu-robo90-robo90-41706-90-B) |
-| 6 | **JST-GH 1.25 mm Konnektör Seti (Kablolu)** | Kartın üzerindeki pile giriş soketine takılacak 2 pin dişi kablo | [Ürüne Git](https://www.robo90.com/jst-gh-125mm-konnektor-seti-2-10-pin-kablolu-jst-kablo-robo90-robo90-56447-63-B) |
-| 7 | **M2×20 mm YSB Vida (10 Adet)** | 3B baskı ön ve arka kapağı sabitlemek için civata | [Ürüne Git](https://www.robo90.com/m2x20mm-ysb-vida-galvaniz-10-adet-civata-somun-pul-robo90-robo90-45994-32-B) |
-| 7b | **M2 Somun (10 Adet)** | M2 vidaların karşılığı | [Ürüne Git](https://www.robo90.com/m2-somun-galvaniz-10-adet-civata-somun-pul-robo90-robo90-45980-32-B) |
+| 1 | **PCM5102A I2S DAC Dekoder Modül** | Stokta Var | [https://www.robo90.com/pcm5102a-i2s-dac-dekoder-modul](https://www.robo90.com/pcm5102a-i2s-dac-dekoder-modul) |
+| 2 | **Lehimleme / Havya Kiti (40W)** (Havya, stand, lehim teli, pasta, pompa) | Stokta Var | [https://www.robo90.com/lehimleme-havya-kiti-40w](https://www.robo90.com/lehimleme-havya-kiti-40w) |
+| 3 | **DT-830D Dijital Multimetre** (Ölçü Aleti - Sarı) | Stokta Var | [https://www.robo90.com/dt-830d-dijital-multimetre-olcu-aleti](https://www.robo90.com/dt-830d-dijital-multimetre-olcu-aleti) |
+| 3b | **DT-830D Dijital Multimetre** (Siyah Renk) | Stokta Var | [https://www.robo90.com/dt-830d-dijital-multimetre-siyah](https://www.robo90.com/dt-830d-dijital-multimetre-siyah) |
+| 4 | **Micro SD Kart Modülü** (Arduino / SPI uyumlu) | Stokta Var | [https://www.robo90.com/arduino-micro-sd-kart-modulu](https://www.robo90.com/arduino-micro-sd-kart-modulu) |
+| 5 | **Mini Sürgülü Switch (3 Pin / SPDT)** | Stokta Var | [https://www.robo90.com/pcb-tip-on-off-switch-ss-12d11g5r](https://www.robo90.com/pcb-tip-on-off-switch-ss-12d11g5r) |
+| 6 | **1×40 2.54 mm Dişi Header** (90 Derece Açılı) | Stokta Var | [https://www.robo90.com/1x40-90-derece-disi-pin-header](https://www.robo90.com/1x40-90-derece-disi-pin-header) |
 
 ---
 
-## 2. El Aletleri ve Ölçü Ekipmanları
+## 2. Robo90 Üzerinde Tükenen (Stokta Olmayan) Ürünler
 
-| # | Ekipman | Amaç | Doğrudan Ürün Linki |
-|---|---|---|---|
-| 8 | **Lehimleme / Havya Kiti (40W)** | Kalem havya, lehim teli, lehim pastası, stand ve pompa içeren set | [Ürüne Git](https://www.robo90.com/lehimleme-havya-kiti-40w-havya-lehim-robo90-robo90-56500-23-B) |
-| 9 | **DT-830D Dijital Multimetre (Sarı)** | Pil voltajı, polarite (+/-) ve kısa devre (buzzer) kontrolü | [Ürüne Git (Sarı)](https://www.robo90.com/dt-830d-dijital-multimetre-olcu-aleti-multimetre-robo90-robo90-40402-53-B) |
-| 9b | **DT-830D Dijital Multimetre (Siyah)** | Siyah renk alternatifi | [Ürüne Git (Siyah)](https://www.robo90.com/dt-830d-dijital-multimetre-siyah-multimetre-robo90-robo90-44678-17-B) |
+Bu ürünlerin bağlantılarının 404 vermesinin sebebi Robo90 stoklarında tamamen tükenmiş olmalarıdır:
 
----
-
-## 3. Montaj ve Bağlantı Öncesi Kritik Bilgiler
-
-1. **Pil Kablosu ve Polarite:**
-   * Pilin kendi çıplak kırmızı/siyah kabloları mevcuttur ancak T-Display S3 kartının üzerinde **JST 1.25 mm** erkek soket bulunmaktadır.
-   * JST 1.25 mm kablonun dişi ucu karta takılır; diğer uçları sürgülü switch üzerinden pilin kablolarına lehimlenir.
-   * **Önemli:** Pili sokete takmadan önce kartın arkasındaki **`+` ve `-`** işaretlerini multimetreyle doğrula. Ters voltaj ESP32-S3 çipine kalıcı hasar verir.
-
-2. **MicroSD Adaptör Kılıfı:**
-   * Kasanın (`kutu/kutu.py`) altındaki yarık 27 mm × 2.8 mm ölçüsünde standart SD adaptör kılıfına göre tasarlanmıştır.
-   * Kılıfın arkasındaki bakır bacaklara doğrudan 6 tel lehimlenerek pertinaksa bağlanır (arada voltaj düşüren regülatör bulunmadığından pil zayıfladığında dahi 3.3V kararlı çalışır).
-
-3. **Dişi Header Kesimi:**
-   * 40 pinlik dişi header maket bıçağı veya yan keskiyle 12'şer pinlik iki parçaya bölünerek pertinaksa lehimlenir. Böylece LilyGO kartı doğrudan sokete takılıp çıkarılabilir kalır.
+1. **7×9 cm Delikli Pertinaks:**
+   * Robo90 üzerindeki hem tek yüzlü hem çift yüzlü delikli pertinaksların stoğu bitmiştir.
+   * *Alternatif:* [Robotistan 7x9cm Çift Taraflı Delikli Plaket](https://www.robotistan.com/7x9cm-double-sided-perfboard) veya Direnç.net 5x10cm delikli plaket.
+2. **JST 1.25 mm 2 Pin Dişi Pil Kablosu:**
+   * Robo90'daki JST-GH 1.25mm seti tükenmiştir.
+   * *Alternatif:* Trendyol veya Hepsiburada üzerinde "JST 1.25 2 pin kablo" olarak tekil temin edilebilir.
+3. **M2×20 mm Vida ve Somun:**
+   * Robo90'daki tüm M2 vida boyları tükenmiştir.
+   * *Alternatif:* Civatacı veya Hepsiburada/Trendyol üzerinden 1 paket M2x20 vida ve somun.
